@@ -1,0 +1,28 @@
+﻿<!-- dom-homework.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DOM Homework</title>
+
+  <!-- Simple style for the “highlight” class (tweak or move to a separate CSS file later). -->
+  <style>
+    .highlight {
+      color: #d63384;          /* bright pink‑ish accent */
+      font-family: system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- Load our JavaScript. `defer` guarantees the script runs after the DOM is parsed. -->
+  <script src="dom-homework.js" defer></script>
+</head>
+<body>
+
+  <!-- Target container -->
+  <div id="myDiv"></div>
+
+  <!-- Add‑item button lives *after* the div, as requested -->
+  <button id="addItemBtn">Add new list item</button>
+
+</body>
+</html>

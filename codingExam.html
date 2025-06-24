@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amortization Schedule Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #schedule {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <p><strong>Name:</strong> Joseph Mark Kiser</p>
+  <p><strong>Email:</strong> jmkiser@waketech.edu</p>
+  <p><strong>Date:</strong> <span id="currentDate"></span></p>
+
+  <button id="Button1">Calculate Amortization Schedule</button>
+
+  <div id="schedule"></div>
+
+  <script>
+    // Display today's date dynamically
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+
+    document.getElementById('Button1').addEventListener('click', function() {
+      const scheduleDiv = document.getElementById('schedule');
+      scheduleDiv.textContent = ''; // Clear previous output
+
+      const loanAmountStr = prompt("Enter the loan amount (no commas):");
+      if (loanAmountStr === null) return; // Cancel pressed
+
+      const loanAmount = parseFloat(loanAmountStr);
+      if (isNaN(loanAmount) || loanAmount <= 0) {
+        alert("Please enter a valid positive number for loan amount.");
+        return;
+      }
+
+      const termYearsStr = prompt("Enter loan term in years (15 or 30):");
+      if (termYearsStr === null) return;
+
+      const termYears = parseInt(termYearsStr, 10);
+      if (termYears !== 15 && termYears !== 30) {
+        alert("Loan term must be either 15 or 30 years.");
+        return;
+      }
+
+      const interestRate = 0.0575; // 5.75% fixed interest rate
+      const termMonths = termYears * 12;
+
+      // Calculate monthly payment
+      const monthlyPayment = Number((((interestRate / 12) * loanAmount) / 
+        (1 - Math.pow(1 + (interestRate / 12), -termMonths))).toFixed(2));
+
+      // Calculate total interest
+      const totalInterest = Number(((monthlyPayment * termMonths) - loanAmount).toFixed(2));
+
+      // Calculate total mortgage amount (principal + interest)
+      const totalMortgage = Number((loanAmount + totalInterest).toFixed(2));
+
+      // Print summary info
+      let output = '';
+      output += `Mortgage Term (years): ${termYears}\n`;
+      output += `Mortgage Interest Rate: ${(interestRate * 100).toFixed(2)}%\n`;
+      output += `Loan Amount (Principal): $${loanAmount.toFixed(2)}\n`;
+      output += `Total Interest: $${totalInterest.toFixed(2)}\n`;
+      output += `Total Mortgage Amount (Principal + Interest): $${totalMortgage.toFixed(2)}\n\n`;
+
+      // Display headers for schedule
+      output += `Month | Payment   | Remaining Balance\n`;
+      output += `--------------------------------------\n`;
+
+      // Initialize remaining balance to total mortgage amount
+      let remainingBalance = totalMortgage;
+
+      // Loop through each month
+      for(let month = 1; month <= termMonths; month++) {
+        // Subtract monthly payment from remaining balance
+        remainingBalance = Number((remainingBalance - monthlyPayment).toFixed(2));
+        if (remainingBalance < 0) remainingBalance = 0;
+
+        output += `${month.toString().padStart(5)} | $${monthlyPayment.toFixed(2).padEnd(8)} | $${remainingBalance.toFixed(2)}\n`;
+
+        // Check if balance has reached zero
+        if (remainingBalance === 0) {
+          output += "\nThis is the Ending Amortization Calculator...\n";
+          break;
+        }
+      }
+
+      scheduleDiv.textContent = output;
+    });
+  </script>
+
+</body>
+</html>

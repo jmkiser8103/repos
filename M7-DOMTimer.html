@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Count‑Up Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    #display {
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 1rem 0 2rem;
+    }
+    input[type="button"] {
+      width: 120px;
+      padding: 0.5rem 1rem;
+      margin: 0.25rem 0;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Timer read‑out -->
+  <div id="display">0</div>
+
+  <!-- Control buttons (IDs exactly as requested) -->
+  <input type="button" id="startTimer" value="Start Timer"><br>
+  <input type="button" id="stopTimer"  value="Stop Timer"><br>
+  <input type="button" id="resetTimer" value="Reset Timer"><br>
+
+  <script>
+    // State variables
+    let elapsedSeconds = 0;   // keeps current time so we can resume
+    let intervalId = null;    // holds the setInterval() ID while running
+
+    // Convenience reference to the display element
+    const display = document.getElementById('display');
+
+    // --- Helper to update the on‑screen timer ---
+    function render() {
+      display.innerHTML = elapsedSeconds;   // REQUIRED: use innerHTML
+    }
+
+    // --- Start button ---
+    document.getElementById('startTimer').addEventListener('click', () => {
+      // Prevent multiple intervals if Start is clicked repeatedly
+      if (intervalId !== null) return;
+
+      intervalId = setInterval(() => {
+        elapsedSeconds += 1;
+        render();
+      }, 1000);
+    });
+
+    // --- Stop button ---
+    document.getElementById('stopTimer').addEventListener('click', () => {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;    // mark timer as stopped
+      }
+    });
+
+    // --- Reset button ---
+    document.getElementById('resetTimer').addEventListener('click', () => {
+      // Stop any running interval
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      // Reset and show zero
+      elapsedSeconds = 0;
+      render();
+    });
+  </script>
+</body>
+</html>
